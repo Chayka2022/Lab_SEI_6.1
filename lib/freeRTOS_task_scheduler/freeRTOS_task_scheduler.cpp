@@ -36,7 +36,7 @@ void fsm_run_task(void *pvParameters)
             need_init = false;
         }
         fsm_run();
-        vTaskDelay(1000/portTICK_PERIOD_MS);
+        vTaskDelay(RUN_DELAY/portTICK_PERIOD_MS);
     }
 
 }
@@ -49,12 +49,12 @@ void fsm_event_handler_task(void *pvParameters)
     {
         if(need_init)
         {
-            vTaskDelay(300/portTICK_PERIOD_MS);
+            vTaskDelay(EVENT_HANDLER_OFFSET/portTICK_PERIOD_MS);
             need_init = 0;
         }
 
         fsm_event_handler();
-        vTaskDelay(300/portTICK_PERIOD_MS);
+        vTaskDelay(EVENT_HANDLER_DELAY/portTICK_PERIOD_MS);
     }
 }
 
