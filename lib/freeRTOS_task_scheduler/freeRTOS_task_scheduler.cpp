@@ -60,11 +60,12 @@ void fsm_event_handler_task(void *pvParameters)
 
 void fsm_init_task(void)
 {
+    own_stdio_setup();
     fsm_init();
 }
 
 void vApplicationIdleHook()
 {
-    own_stdio_setup();
-    print_fsm_state();
+    //own_stdio_setup();
+    //print_fsm_state();
 }

@@ -2,7 +2,7 @@
 
 static fsm_t button_led_fsm[] = 
 {
-    {LED_OFF,   PRESSED,    0,              {STATE_1, STATE_2}}, 
+    {LED_OFF,   PRESSED,    0,              {STATE_5, STATE_2}}, 
     {LED_ON,    PRESSED,    TIMEOUT,        {STATE_1, STATE_3}},
     {LED_HALF,  PRESSED,    TIMEOUT,        {STATE_1, STATE_4}},
     {LED_BLINK, PRESSED,    0,              {STATE_1, STATE_1}},
@@ -17,8 +17,6 @@ void fsm_init(void)
 
     pinMode(LED_PIN, OUTPUT);
     pinMode(BUTTON_PIN, INPUT_PULLUP);
-
-    printf("FSM initialized\n\r");
 }
 
 void fsm_event_handler(void)
@@ -40,20 +38,25 @@ void fsm_event_handler(void)
         {
             last_time_debounce = millis();
 
-            if ((millis() - button_press_start) >= SOS_TIMEOUT)  // Actual SOS hold time
-            {
-                current_state = STATE_5;  // LED_SOS
-                state_entry_time = millis();
-                return;
-            }
+            // Determine timeout condition
+            bool timeout_passed = (millis() - state_entry_time) >= current_state->timeout;
 
-            if ((millis() - state_entry_time) >= current_state->timeout)
+            // Special handling for STATE_0 to use long hold for SOS
+            if (current_state == STATE_1)
             {
-                current_state = current_state->next_state[1];
+                if ((millis() - button_press_start) >= SOS_TIMEOUT)
+                {
+                    current_state = current_state->next_state[0];  // long hold → STATE_5
+                }
+                else
+                {
+                    current_state = current_state->next_state[1];  // short press → STATE_2
+                }
             }
             else
             {
-                current_state = current_state->next_state[0];
+                // Other states: follow timeout logic
+                current_state = timeout_passed ? current_state->next_state[1] : current_state->next_state[0];
             }
 
             state_entry_time = millis();
@@ -64,8 +67,9 @@ void fsm_event_handler(void)
         button_held = false;
     }
 
-    printf("Current state: %d\n\r", current_state->led_state);
+    print_fsm_state();
 }
+
 
 
 void fsm_run(void)

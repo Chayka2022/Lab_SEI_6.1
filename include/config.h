@@ -3,7 +3,7 @@
 
 #define BAUDRATE                115200
 
-#define DEBOUNCE_TIME           10u
+#define DEBOUNCE_TIME           500u
 
 #define BUTTON_PIN              2
 #define LED_PIN                 13
