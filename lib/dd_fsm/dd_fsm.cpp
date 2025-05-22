@@ -2,11 +2,11 @@
 
 static fsm_t button_led_fsm[] = 
 {
-    {LED_OFF,   PRESSED,    0,         {STATE_1, STATE_2}}, 
-    {LED_ON,    PRESSED,    TIMEOUT,   {STATE_1, STATE_3}},
-    {LED_HALF,  PRESSED,    TIMEOUT,   {STATE_1, STATE_4}},
-    {LED_BLINK, PRESSED,    0,         {STATE_1, STATE_5}},
-    {LED_SOS,   PRESSED,    SOS_TIMEOUT,         {STATE_1, STATE_1}}, 
+    {LED_OFF,   PRESSED,    0,              {STATE_1, STATE_2}}, 
+    {LED_ON,    PRESSED,    TIMEOUT,        {STATE_1, STATE_3}},
+    {LED_HALF,  PRESSED,    TIMEOUT,        {STATE_1, STATE_4}},
+    {LED_BLINK, PRESSED,    0,              {STATE_1, STATE_1}},
+    {LED_SOS,   PRESSED,    SOS_TIMEOUT,    {STATE_1, STATE_1}}, 
 };
 
 static fsm_t *current_state = STATE_RESET;
@@ -40,7 +40,7 @@ void fsm_event_handler(void)
         {
             last_time_debounce = millis();
 
-            if ((millis() - button_press_start) >= current_state->timeout)  // 5s hold
+            if ((millis() - button_press_start) >= SOS_TIMEOUT)  // Actual SOS hold time
             {
                 current_state = STATE_5;  // LED_SOS
                 state_entry_time = millis();
