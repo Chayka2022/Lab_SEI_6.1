@@ -90,8 +90,6 @@ void fsm_run(void)
             fsm_set_output(LED_PIN, current_state->led_state);
             break;
     }
-
-    printf("Current state: %d\n\r", current_state->led_state);
 }
 
 void fsm_led_toggle(uint8_t led)
@@ -195,4 +193,9 @@ void fsm_blink_sos(uint8_t led)
     }
 
     step++;
+}
+
+void print_fsm_state(void)
+{
+    printf("Current state: %d\n\r", current_state->led_state);
 }

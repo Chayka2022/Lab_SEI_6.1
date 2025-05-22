@@ -41,6 +41,7 @@ void fsm_run(void);
 void fsm_led_toggle(uint8_t led);
 void fsm_set_output(uint8_t led, fsm_out_t led_state);
 void fsm_blink_sos(uint8_t led);
+void print_fsm_state(void);
 
 
 

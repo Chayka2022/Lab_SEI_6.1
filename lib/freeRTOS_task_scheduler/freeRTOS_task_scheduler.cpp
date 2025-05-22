@@ -35,7 +35,6 @@ void fsm_run_task(void *pvParameters)
             fsm_init_task();
             need_init = false;
         }
-        //printf("fsm_run_task\n\r");
         fsm_run();
         vTaskDelay(1000/portTICK_PERIOD_MS);
     }
@@ -50,11 +49,10 @@ void fsm_event_handler_task(void *pvParameters)
     {
         if(need_init)
         {
-            vTaskDelay(50/portTICK_PERIOD_MS);
+            vTaskDelay(300/portTICK_PERIOD_MS);
             need_init = 0;
         }
 
-        //printf("fsm_event_handler_task\n\r");
         fsm_event_handler();
         vTaskDelay(300/portTICK_PERIOD_MS);
     }
@@ -62,11 +60,11 @@ void fsm_event_handler_task(void *pvParameters)
 
 void fsm_init_task(void)
 {
-    own_stdio_setup();
     fsm_init();
 }
 
 void vApplicationIdleHook()
 {
-    
+    own_stdio_setup();
+    print_fsm_state();
 }
